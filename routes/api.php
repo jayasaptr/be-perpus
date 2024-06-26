@@ -1,6 +1,4 @@
 <?php
-
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,7 +33,9 @@ Route::prefix('admin')->group(function () {
 
 });
 
-//route register
+
+
+//route group with middleware cors dan auth:api
 Route::post('/register', [App\Http\Controllers\Api\User\RegisterController::class, 'register']);
 Route::post('/login', [App\Http\Controllers\Api\User\LoginController::class, 'login']);
 
@@ -46,8 +46,12 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('/user', [App\Http\Controllers\Api\User\UserController::class, 'getUser']);
     Route::get('/user/{id}', [App\Http\Controllers\Api\User\UserController::class, 'getUserById']);
     Route::delete('/user/{id}', [App\Http\Controllers\Api\User\UserController::class, 'deleteUser']);
-    Route::put('/user/{id}', [App\Http\Controllers\Api\User\UserController::class, 'updateUser']);
+    Route::post('/user/{id}', [App\Http\Controllers\Api\User\UserController::class, 'updateUser']);
     Route::post('/user', [App\Http\Controllers\Api\User\UserController::class, 'createUser']);
     Route::post('/user/{id}/change-image', [App\Http\Controllers\Api\User\UserController::class, 'updateImageUser']);
+
+    Route::resource('category', App\Http\Controllers\Api\Category\CategoryController::class);
+    Route::resource('book', App\Http\Controllers\Api\Book\BookController::class);
+    Route::resource('transaction', App\Http\Controllers\Api\Transaction\TransactionController::class);
 
 });

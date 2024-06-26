@@ -17,14 +17,26 @@ class Book extends Model
         'publication_year',
     ];
 
-    public function category()
+    public function categoryId()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     //transactin
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    //ambil name category dari relasi category_id
+    public function getCategoryNameAttribute()
+    {
+        return $this->category->name;
+    }
+
+    //image
+    public function getImageAttribute($value)
+    {
+        return url('storage/images/'.$value);
     }
 }
