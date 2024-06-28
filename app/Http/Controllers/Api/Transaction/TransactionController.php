@@ -18,9 +18,9 @@ class TransactionController extends Controller
 
         $search = $request->search ?? '';
 
-        $transactions = Transaction::whereHas('user', function($query) use ($search) {
+        $transactions = Transaction::whereHas('userId', function($query) use ($search) {
             $query->where('name', 'like', '%'.$search.'%');
-        })->with('user')->paginate($pagination);
+        })->with('userId')->with('bookId')->paginate($pagination);
 
         //response data transactions
 
@@ -40,16 +40,16 @@ class TransactionController extends Controller
         $this->validate($request, [
             'user_id'        => 'required|integer',
             'book_id'        => 'required|integer',
-            'borrow_date'    => 'required|date',
-            'return_date'    => 'required|date',
+            'borrowed_at'    => 'required|date',
+            'returned_at'    => 'required|date',
         ]);
 
         //create data transaction
         $transaction = Transaction::create([
             'user_id'        => $request->user_id,
             'book_id'        => $request->book_id,
-            'borrow_date'    => $request->borrow_date,
-            'return_date'    => $request->return_date,
+            'borrowed_at'    => $request->borrowed_at,
+            'returned_at'    => $request->returned_at,
         ]);
 
         //response data transaction
@@ -100,12 +100,9 @@ class TransactionController extends Controller
             ], 404);
         }
 
-        //update data transaction
+        //update data status
         $transaction->update([
-            'user_id'        => $request->user_id ?? $transaction->user_id,
-            'book_id'        => $request->book_id ?? $transaction->book_id,
-            'borrow_date'    => $request->borrow_date ?? $transaction->borrow_date,
-            'return_date'    => $request->return_date ?? $transaction->return_date,
+            'status' => $request->status
         ]);
 
         //response data transaction
@@ -113,6 +110,21 @@ class TransactionController extends Controller
             'status' => true,
             'message' => 'Transaction Updated',
             'data' => $transaction
+        ], 200);
+    }
+
+    public function getTransactionByUserId(Request $request, string $id)
+    {
+        //get all transactions by user id from database with pagination
+        $pagination = $request->pagination ?? 5;
+
+        $transactions = Transaction::where('user_id', $id)->with('userId')->with('bookId')->paginate($pagination);
+
+        //response data transactions
+        return response()->json([
+            'status' => true,
+            'message' => 'Data Transaction',
+            'data' => $transactions
         ], 200);
     }
 

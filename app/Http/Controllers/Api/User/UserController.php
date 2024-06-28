@@ -77,7 +77,6 @@ class UserController extends Controller
 
     }
 
-    //update data user by id berdasarkan apa yang diinputkan oleh user saja tidak perlu validasi dan jika user menginputkan image maka image yang lama akan dihapus
     public function updateUser(Request $request, $id)
     {
         $user = User::find($id);
@@ -101,7 +100,7 @@ class UserController extends Controller
 
         $user->update($data);
 
-        return response()->json(['message' => 'User updated successfully', 'user' => $user], 200);
+        return response()->json(new UserResource(true, 'Data User', $user), 200);
     }
 
     //update image user by id

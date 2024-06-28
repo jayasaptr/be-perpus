@@ -17,9 +17,14 @@ class Transaction extends Model
         'status',
     ];
 
-    public function user()
+    public function userId()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function bookId()
+    {
+        return $this->belongsTo(Book::class, 'book_id');
     }
 
     public function book()

@@ -53,5 +53,10 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::resource('category', App\Http\Controllers\Api\Category\CategoryController::class);
     Route::resource('book', App\Http\Controllers\Api\Book\BookController::class);
     Route::resource('transaction', App\Http\Controllers\Api\Transaction\TransactionController::class);
+    //get transaction by user id
+    Route::get('/transaction/user/{id}', [App\Http\Controllers\Api\Transaction\TransactionController::class, 'getTransactionByUserId']);
+
+    Route::get('/dashboard', [App\Http\Controllers\Api\Dashboard\DashboardController::class, 'index']);
+    Route::get('/dashboard/{id}', [App\Http\Controllers\Api\Dashboard\DashboardController::class, 'indexByUserId']);
 
 });
